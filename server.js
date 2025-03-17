@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+path = require("path");
 
 const studentRoutes = require("./routes/studentRoutes");
 const authRoutes = require("./routes/authRoute");
@@ -19,14 +20,14 @@ app.use((err, req, res, next) => {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/certificates", express.static(path.join(__dirname, "certificates")));
 
 // Connect to MongoDB
 connectDB();
 
-
 app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/institutions", institutionRoutes);
-app.use("/api/students", studentRoutes); 
+app.use("/api/students", studentRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

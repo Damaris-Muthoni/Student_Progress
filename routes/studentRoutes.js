@@ -1,8 +1,10 @@
 const express = require("express");
-const { registerStudent } = require("../controllers/studentControllers"); // ✅ Correct Import
+const {
+  registerStudent,
+  uploadCertificate,
+} = require("../controllers/studentControllers"); // ✅ Correct Import
 const { authMiddleware } = require("../middleware/authMiddleware"); // ✅ Ensure Middleware Exists
-const { uploadCertificate } = require("../controllers/studentControllers");
-const authenticate = require("../middleware/authMiddleware");
+
 const upload = require("../middleware/multer");
 
 const router = express.Router();
@@ -11,7 +13,7 @@ const router = express.Router();
 router.post("/register", authMiddleware, registerStudent);
 router.post(
   "/upload-certificate",
-  authenticate,
+  authMiddleware,
   upload.single("certificate"),
   uploadCertificate
 );
