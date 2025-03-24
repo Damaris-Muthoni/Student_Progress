@@ -43,7 +43,6 @@ const registerStudent = async (req, res) => {
 
     // ✅ Save student & update institution records
     await newStudent.save();
-    institution.students.push(newStudent._id);
     await institution.save();
 
     res.status(201).json({

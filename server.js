@@ -7,6 +7,8 @@ path = require("path");
 const studentRoutes = require("./routes/studentRoutes");
 const authRoutes = require("./routes/authRoute");
 const institutionRoutes = require("./routes/institutionRoutes");
+const adminActionControllers = require("./routes/adminActionRoutes");
+const adminAuthControllers = require("./routes/adminAuthRoutes");
 
 const app = express();
 app.use((err, req, res, next) => {
@@ -28,6 +30,8 @@ connectDB();
 app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/institutions", institutionRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/admin/auth", adminAuthControllers);
+app.use("/api/admin/actins", adminActionControllers);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

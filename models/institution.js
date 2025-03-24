@@ -9,11 +9,10 @@ const institutionSchema = new mongoose.Schema({
   address: { type: String, required: true },
   schoolId: { type: String, unique: true, required: true }, // Default login username
   password: { type: String, required: true }, // Default is schoolId, must be changed later
-  students: [{ type: mongoose.Schema.Types.ObjectId, ref: "Student" }],
   createdAt: { type: Date, default: Date.now },
   passwordChanged: { type: Boolean, default: false }, // To track if the password has been changed
+  token: { token: String, createdAt: { type: Date, default: Date.now } },
 });
-
 
 const Institution = mongoose.model("Institution", institutionSchema);
 
