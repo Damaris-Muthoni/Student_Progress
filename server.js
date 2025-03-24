@@ -2,10 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+path = require("path");
 
 const studentRoutes = require("./routes/studentRoutes");
 const authRoutes = require("./routes/authRoute");
 const institutionRoutes = require("./routes/institutionRoutes");
+const adminActionControllers = require("./routes/adminActionRoutes");
+const adminAuthControllers = require("./routes/adminAuthRoutes");
 
 const app = express();
 app.use((err, req, res, next) => {
@@ -19,14 +22,16 @@ app.use((err, req, res, next) => {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/certificates", express.static(path.join(__dirname, "certificates")));
 
 // Connect to MongoDB
 connectDB();
 
-
 app.use("/api/auth", authRoutes); // Authentication routes
 app.use("/api/institutions", institutionRoutes);
-app.use("/api/students", studentRoutes); 
+app.use("/api/students", studentRoutes);
+app.use("/api/admin/auth", adminAuthControllers);
+app.use("/api/admin/actins", adminActionControllers);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

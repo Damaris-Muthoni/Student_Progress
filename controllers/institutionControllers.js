@@ -47,3 +47,23 @@ exports.registerInstitution = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// Fetch School Details
+exports.getSchoolDetails = async (req, res) => {
+  try {
+    const school = await Institution.findOne({ schoolId: req.user.schoolId });
+
+    if (!school) {
+      return res.status(404).json({ message: "School not found" });
+    }
+
+    res.json({
+      name: school.name,
+      county: school.county,
+      schoolId: school.schoolId,
+    });
+  } catch (error) {
+    console.error("Error fetching school details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

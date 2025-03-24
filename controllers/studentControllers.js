@@ -1,8 +1,7 @@
 const { Institution, Student } = require("../models/institution");
-// const Student = require("../models/student");
-const upload = require("../middleware/multer");
+
 // ✅ Institution Registers a Student
-exports.registerStudent = async (req, res) => {
+const registerStudent = async (req, res) => {
   try {
     const {
       name,
@@ -43,7 +42,6 @@ exports.registerStudent = async (req, res) => {
 
     // ✅ Save student & update institution records
     await newStudent.save();
-    institution.students.push(newStudent._id);
     await institution.save();
 
     res.status(201).json({
@@ -57,27 +55,42 @@ exports.registerStudent = async (req, res) => {
 
 
 // uploadControls.js
-
+const Student = require("../models/student");
+const upload = require("../middleware/multer");
 
 exports.uploadCertificate = async (req, res) => {
   try {
-    const { studentId, level } = req.body;
+    const { birthCertificateNumber, level } = req.body;
     const institutionId = req.user.id; // Extract from authentication token
 
-    const student = await Student.findOne({ _id: studentId, institution: institutionId });
+    // ✅ Find student by birth certificate number and institution
+    const student = await Student.findOne({
+      birthCertificateNumber,
+      institution: institutionId,
+    });
+
     if (!student) {
-      return res.status(404).json({ message: "Student not found or not registered under your institution." });
+      return res.status(404).json({
+        message: "Student not found or not registered under your institution.",
+      });
     }
 
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded." });
     }
 
+    // ✅ Save the file path in the student's certificates
     student.certificates[level] = req.file.path;
     await student.save();
 
-    res.status(200).json({ message: "Certificate uploaded successfully", filePath: req.file.path });
+    res.status(200).json({
+      message: "Certificate uploaded successfully",
+      filePath: req.file.path,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// ✅ Export both functions at once
+module.exports = { registerStudent, uploadCertificate };
