@@ -1,5 +1,6 @@
 const { Institution, Student } = require("../models/institution");
-
+// const Student = require("../models/student");
+const upload = require("../middleware/multer");
 // ✅ Institution Registers a Student
 exports.registerStudent = async (req, res) => {
   try {
@@ -56,8 +57,7 @@ exports.registerStudent = async (req, res) => {
 
 
 // uploadControls.js
-const Student = require("../models/student");
-const upload = require("../middleware/multer");
+
 
 exports.uploadCertificate = async (req, res) => {
   try {
